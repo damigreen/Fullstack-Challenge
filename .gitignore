@@ -1,0 +1,39 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+/misc
+part1/node_modules
+part2/backend/node_modules
+part2/note-app/node_modules
+part3/node_modules
+part5/class-component-anecdotes/node_modules
+part5/custom-hooks/node_modules
+part6/redux-increment/node_modules
+part6/redux-notes/node_modules
+part6/redux-notes-reducers/node_modules
+part7/react-router/node_modules
+part7/react-router-react-bootstrap/node_modules
+part7/react-router-styled-components/node_modules
+part7/webpack/node_modules
+part8/graphql-phonebook/node_modules
