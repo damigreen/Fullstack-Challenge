@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { gql } from 'apollo-boost';
 
 const FIND_PERSON = gql`
   query findPersonByName($nameToSearch: String!) {
@@ -14,7 +15,7 @@ const FIND_PERSON = gql`
   }
 `
 
-const Persons = ({ result }) => {
+const Persons = ({ result, client }) => {
   const [person, setPerson] = useState(null);
 
   if (result.loading) {
@@ -23,14 +24,40 @@ const Persons = ({ result }) => {
     )
   }
 
+  const showPerson = async (name) => {
+    const { data } = await client.query({
+      query: FIND_PERSON,
+      variables: { nameToSearch: name }
+    })
+    console.log(data.findPerson);
+    setPerson(data.findPerson)
+    console.log(person);
+  }
+
   const persons = result.data.allPersons;
+
+  if (person) {
+    return (
+      <div>
+        <h2>{person.name}</h2>
+        <div>{person.address.street} {person.address.city}</div>
+        <div>{person.phone}</div>
+        <button onClick={() => setPerson(null)}>close</button>
+      </div>
+    )
+  }
 
   return (
     <div>
       <h2>Persons</h2>
-      {persons.map(p => 
-        <div key={p.name}>{p.name} {p.phone}</div>
-      )}
+      {persons.map(p => (
+        <div key={p.name}>
+          {p.name} {p.phone}
+          <button onClick={() => showPerson(p.name)}>
+            show address
+          </button>
+        </div>
+      ))}
     </div>
   )
 }
