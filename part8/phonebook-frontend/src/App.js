@@ -45,9 +45,9 @@ const ALL_PERSONS = gql`
 const CREATE_PERSON = gql`
   mutation createPerson($name: String!, $phone: String!, $street: String!, $city: String!) {
     addPerson(
-      name: $name
-      phone: $phone
-      street: $street
+      name: $name,
+      phone: $phone,
+      street: $street,
       city: $city
     ) {
       name
@@ -65,15 +65,18 @@ function App() {
     <div>
       <ApolloConsumer>
         {(client) => (
-          <Query query={ALL_PERSONS} pollInterval={2000} >
+          <Query query={ALL_PERSONS} >
             {(result) => <Persons result={result} client={client} />} 
           </Query>
         )}
       </ApolloConsumer>
-      <Mutation mutation={CREATE_PERSON}>
+      <Mutation
+        mutation={CREATE_PERSON}
+        refetchQueries={[ {query: ALL_PERSONS} ]}
+      >
         {(addPerson) => (
           <PersonForm
-            addPerson={addPerson}
+            addUser={addPerson}
           />
         )}
       </Mutation>

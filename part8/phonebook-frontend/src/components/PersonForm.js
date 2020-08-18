@@ -9,7 +9,7 @@ const PersonForm = (props) => {
 
   const submit = async (e) => {
     e.preventDefault();
-    await props.addPerson({
+    await props.addUser({
       variables: { name, phone, street, city }
     });
   }
@@ -21,28 +21,28 @@ const PersonForm = (props) => {
           <label for="Name">Name</label>
           <input
             value={name}
-            onChange={ ({target}) => setName(target.value)}
+            onChange={({ target }) => setName(target.value)}
           />
         </div>
         <div>
           <label for="phone">Phone</label>
           <input
             value={phone}
-            onChange={ ({target}) => setPhone(target.value)}
+            onChange={({ target }) => setPhone(target.value)}
           />
         </div>
         <div>
           <label for="street">Street</label>
           <input
             value={street}
-            onChange={ ({target}) => setStreet(target.value)}
+            onChange={({ target }) => setStreet(target.value)}
           />
         </div>
         <div>
           <label for="city">City</label>
           <input
             value={city}
-            onChange={ ({target}) => setCity(target.value)}
+            onChange={({ target }) => setCity(target.value)}
           />
         </div>
         <button type="submit">add!</button>
