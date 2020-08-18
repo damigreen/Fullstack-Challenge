@@ -65,7 +65,7 @@ function App() {
     <div>
       <ApolloConsumer>
         {(client) => (
-          <Query query={ALL_PERSONS}>
+          <Query query={ALL_PERSONS} pollInterval={2000} >
             {(result) => <Persons result={result} client={client} />} 
           </Query>
         )}
