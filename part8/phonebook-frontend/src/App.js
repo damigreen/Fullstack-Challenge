@@ -43,7 +43,7 @@ const ALL_PERSONS = gql`
 `
 
 const CREATE_PERSON = gql`
-  mutation createPerson($name, $phone, $street, $city) {
+  mutation createPerson($name: String!, $phone: String!, $street: String!, $city: String!) {
     addPerson(
       name: $name
       phone: $phone
