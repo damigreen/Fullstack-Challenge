@@ -1,6 +1,7 @@
 import React from 'react';
 import ApolloClient, { gql } from 'apollo-boost';
-import { Query } from 'react-apollo';
+import { Query, ApolloConsumer } from 'react-apollo';
+import Persons from './components/Persons';
 
 export const client = new ApolloClient({
   uri: 'http://localhost:4000'
@@ -41,18 +42,13 @@ const ALL_PERSONS = gql`
 
 function App() {
   return (
-    <Query query={ALL_PERSONS}>
-      {(result) => {
-        if (result.loading) {
-          return <div>Loading...</div>
-        }
-        return (
-          <div>
-            {result.data.allPersons.map(person => person.name).join(', ')}
-          </div>
-        )
-      }}
-    </Query>
+    <ApolloConsumer>
+      {(client) => (
+        <Query query={ALL_PERSONS}>
+          {(result) => <Persons result={result} client={client} />} 
+        </Query>
+      )}
+    </ApolloConsumer>
   );
 }
 
