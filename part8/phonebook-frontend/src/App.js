@@ -1,7 +1,9 @@
 import React from 'react';
 import ApolloClient, { gql } from 'apollo-boost';
-import { Query, ApolloConsumer } from 'react-apollo';
+import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 import Persons from './components/Persons';
+import PersonForm from './components/PersonForm';
+
 
 export const client = new ApolloClient({
   uri: 'http://localhost:4000'
@@ -40,15 +42,42 @@ const ALL_PERSONS = gql`
   }
 `
 
+const CREATE_PERSON = gql`
+  mutation createPerson($name, $phone, $street, $city) {
+    addPerson(
+      name: $name
+      phone: $phone
+      street: $street
+      city: $city
+    ) {
+      name
+      phone
+      address {
+        street
+        city
+      }
+    }
+  }
+`
+
 function App() {
   return (
-    <ApolloConsumer>
-      {(client) => (
-        <Query query={ALL_PERSONS}>
-          {(result) => <Persons result={result} client={client} />} 
-        </Query>
-      )}
-    </ApolloConsumer>
+    <div>
+      <ApolloConsumer>
+        {(client) => (
+          <Query query={ALL_PERSONS}>
+            {(result) => <Persons result={result} client={client} />} 
+          </Query>
+        )}
+      </ApolloConsumer>
+      <Mutation mutation={CREATE_PERSON}>
+        {(addPerson) => (
+          <PersonForm
+            addPerson={addPerson}
+          />
+        )}
+      </Mutation>
+    </div>
   );
 }
 
