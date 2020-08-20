@@ -16,6 +16,7 @@ const PersonForm = (props) => {
 
   return (
     <div>
+      <h2>Create New</h2>
       <form onSubmit={submit} >
         <div>
           <label for="Name">Name</label>
