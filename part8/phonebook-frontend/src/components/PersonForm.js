@@ -12,6 +12,11 @@ const PersonForm = (props) => {
     await props.addUser({
       variables: { name, phone, street, city }
     });
+
+    setName('');
+    setPhone('');
+    setStreet('');
+    setCity('');
   }
 
   return (
