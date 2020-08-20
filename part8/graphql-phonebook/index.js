@@ -96,7 +96,9 @@ const resolvers = {
       }
 
       const person = { ...args, id: uuidv4() }
-        return person
+      persons.push(person);
+
+      return person
     },
     editNumber: (root, args) => {
       const person = persons.find(p => p.name === args.name)
