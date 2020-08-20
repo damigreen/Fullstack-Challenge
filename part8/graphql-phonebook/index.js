@@ -107,7 +107,8 @@ const resolvers = {
       }
 
       const updatedPerson = { ...person, phone: args.phone }
-      persons.map(p => p.name === args.name ? updatedPerson : p)
+      persons = persons.map(p => p.name === args.name ? updatedPerson : p)
+
       return updatedPerson
     }
   }
