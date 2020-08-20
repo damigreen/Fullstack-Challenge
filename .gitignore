@@ -37,3 +37,5 @@ part7/react-router-react-bootstrap/node_modules
 part7/react-router-styled-components/node_modules
 part7/webpack/node_modules
 part8/graphql-phonebook/node_modules
+part8/graphql-phonebook-backend/node_modules
+part8/phonebook-frontend/node_modules
