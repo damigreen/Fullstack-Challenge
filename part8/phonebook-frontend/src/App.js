@@ -1,32 +1,27 @@
 import React, { useState } from 'react';
-import ApolloClient, { gql } from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
 
-
-export const client = new ApolloClient({
-  uri: 'http://localhost:4000'
-})
-
-const query  = gql`
-  {
-    allPersons {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
-    }
-  }
-`
-client.query({query})
-  .then(response => {
+// const query  = gql`
+//   {
+//     allPersons {
+//       name
+//       phone
+//       address {
+//         street
+//         city
+//       }
+//       id
+//     }
+//   }
+// `
+// client.query({query})
+//   .then(response => {
     // console.log(response.data)
-  })
+//   })
 
 const ALL_PERSONS = gql`
   {
@@ -95,7 +90,7 @@ function App() {
       <ApolloConsumer>
         {(client) => (
           <Query query={ALL_PERSONS} >
-            {(result) => <Persons result={result} client={client} />} 
+            {(result) => <Persons result={result} />} 
           </Query>
         )}
       </ApolloConsumer>
