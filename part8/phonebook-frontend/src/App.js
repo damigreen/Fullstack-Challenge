@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { Mutation } from 'react-apollo';
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
@@ -73,14 +72,20 @@ const EDIT_NUMBER = gql`
 
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
-  const persons = useQuery(ALL_PERSONS);
-
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message);
     setTimeout(() => {
       setErrorMessage(null)
     }, 10000);
   }
+
+  const persons = useQuery(ALL_PERSONS);
+  const [addPerson] = useMutation(CREATE_PERSON, {
+    onError: {handleError},
+    refetchQueries: [{ query: ALL_PERSONS }]
+  });
+  const [editNumber] = useMutation(EDIT_NUMBER);
+
 
   return (
     <div>
@@ -92,26 +97,12 @@ function App() {
 
       <Persons result={persons} />
 
-      <Mutation
-        mutation={CREATE_PERSON}
-        refetchQueries={[ {query: ALL_PERSONS} ]}
-        onError={handleError}
-      >
-        {(addPerson) => (
-          <PersonForm
-            addUser={addPerson}
-          />
-        )}
-      </Mutation>
-      <Mutation
-        mutation={EDIT_NUMBER}
-      >
-        {(editNumber) => (
-          <PhoneForm
-            editNumber={editNumber}
-          />
-        )}
-      </Mutation>
+      <PersonForm
+        addUser={addPerson}
+      />
+      <PhoneForm
+        editNumber={editNumber}
+      />
     </div>
   );
 }
