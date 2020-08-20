@@ -3,6 +3,7 @@ import ApolloClient, { gql } from 'apollo-boost';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
+import PhoneForm from './components/PhoneForm';
 
 
 export const client = new ApolloClient({
@@ -24,8 +25,7 @@ const query  = gql`
 `
 client.query({query})
   .then(response => {
-    console.log(response)
-    console.log(response.data)
+    // console.log(response.data)
   })
 
 const ALL_PERSONS = gql`
@@ -56,6 +56,21 @@ const CREATE_PERSON = gql`
         street
         city
       }
+      id
+    }
+  }
+`
+
+const EDIT_NUMBER = gql`
+  mutation editNumber($name: String!, $phone: String!) {
+    editNumber(name: $name, phone: $phone) {
+      name
+      phone
+      address {
+        street
+        city
+      }
+      id
     }
   }
 `
@@ -71,6 +86,12 @@ function App() {
 
   return (
     <div>
+      {errorMessage && 
+       <div style={{color: 'red'}}>
+         {errorMessage}
+        </div>
+      }
+
       <ApolloConsumer>
         {(client) => (
           <Query query={ALL_PERSONS} >
@@ -86,6 +107,15 @@ function App() {
         {(addPerson) => (
           <PersonForm
             addUser={addPerson}
+          />
+        )}
+      </Mutation>
+      <Mutation
+        mutation={EDIT_NUMBER}
+      >
+        {(editNumber) => (
+          <PhoneForm
+            editNumber={editNumber}
           />
         )}
       </Mutation>
