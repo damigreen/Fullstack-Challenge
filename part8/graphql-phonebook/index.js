@@ -1,5 +1,21 @@
 const { ApolloServer, UserInputError, gql} = require('apollo-server')
 const { v4: uuidv4 } = require('uuid');
+const mongoose = require('mongoose')
+const Person = require('./models/Person')
+
+mongoose.set('useFindAndModify', false)
+
+MONGODB_URI='mongodb+srv://damigreen:4444@cluster0-9junr.mongodb.net/library-app?retryWrites=true&w=majority'
+
+console.log('connecting to mongoDB');
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log('conneted to mongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to mongoDB:', error.message);
+  })
 
 let persons = [
   {
@@ -65,15 +81,18 @@ const typeDefs = gql`
 
 `
 
+
 const resolvers = {
   Query: {
-    personCount: () => persons.length,
+    // personCount: () => persons.length,
+    personCount: () => Person.collection.countDocuments(),
     allPersons: (root, args) => {
+      var personObj = Person.find({})
       if (!args.phone) {
-        return persons
+        return personObj;
       }
-      const byPhone = (persons) =>
-        args.phone = 'YES' ? persons.phone : !persons.phone
+      const byPhone = () =>
+        args.phone = 'YES' ? Person.find({ phone: args.phone}) : !Person.find({ phone: args.phone})
       return persons.filter(byPhone);
     },
     findPerson: (root, args) =>
@@ -89,30 +108,30 @@ const resolvers = {
   },
   Mutation: {
     addPerson: (root, args) => {
-      if (persons.find(p => p.name === args.name)) {
-        throw new UserInputError('Name must be unique', {
-          invalidArgs: args.name,
-        })
-      }
-
-      const person = { ...args, id: uuidv4() }
-      persons.push(person);
-
-      return person
+      // if (persons.find(p => p.name === args.name)) {
+        const personObj = Person.find({ name: args.name })
+        if (personObj.name === args.name) {
+          throw new UserInputError('Name must be unique', {
+            invalidArgs: args.name
+          });
+        }
+        const person = new Person({ ...args, id: uuidv4() });
+  
+        return person.save()
     },
-    editNumber: (root, args) => {
-      const person = persons.find(p => p.name === args.name)
-      if (!persons) {
+    editNumber: async (root, args) => {
+      // const person = persons.find(p => p.name === args.name)
+      const person = await Person.findOne({ name: args.name })
+      if (!person) {
         return null
       }
-
-      const updatedPerson = { ...person, phone: args.phone }
-      persons = persons.map(p => p.name === args.name ? updatedPerson : p)
-
-      return updatedPerson
+      
+      person.phone = args.phone;
+      return person.save();
     }
+  },
   }
-}
+
 
 const server = new ApolloServer({
   typeDefs,
