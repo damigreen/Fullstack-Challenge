@@ -31,9 +31,7 @@ const Persons = ({ result }) => {
       query: FIND_PERSON,
       variables: { nameToSearch: name }
     })
-    console.log(data.findPerson);
     setPerson(data.findPerson)
-    console.log(person);
   }
 
   const persons = result.data.allPersons;
