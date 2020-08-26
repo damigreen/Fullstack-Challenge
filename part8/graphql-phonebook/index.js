@@ -110,16 +110,25 @@ const resolvers = {
     }
   },
   Mutation: {
-    addPerson: (root, args) => {
-        const personObj = Person.find({ name: args.name })
-        if (personObj.name === args.name) {
-          throw new UserInputError('Name must be unique', {
-            invalidArgs: args.name
-          });
-        }
+    addPerson: async (root, args) => {
+        // const personObj = Person.find({ name: args.name })
+        // if (personObj.name === args.name) {
+        //   throw new UserInputError('Name must be unique', {
+        //     invalidArgs: args.name
+        //   });
+        // }
         const person = new Person({ ...args, id: uuidv4() });
-  
-        return person.save()
+
+        try {
+          await person.save();
+        } catch (error) {
+          console.log(error.message)
+          throw new UserInputError(error.message, {
+            invalidArgs: args
+          })
+        }
+        
+
     },
     editNumber: async (root, args) => {
       // const person = persons.find(p => p.name === args.name)
@@ -127,9 +136,16 @@ const resolvers = {
       if (!person) {
         return null
       }
-      
+
       person.phone = args.phone;
-      return person.save();
+      try {
+        person.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        });
+      }
+      return person;
     }
   },
 }
