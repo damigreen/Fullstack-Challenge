@@ -9,14 +9,19 @@ const PersonForm = (props) => {
 
   const submit = async (e) => {
     e.preventDefault();
-    await props.addUser({
-      variables: { name, phone, street, city }
-    });
+    try {
+      await props.addUser({
+        variables: { name, phone, street, city }
+      });
+  
+      setName('');
+      setPhone('');
+      setStreet('');
+      setCity('');
 
-    setName('');
-    setPhone('');
-    setStreet('');
-    setCity('');
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   return (
