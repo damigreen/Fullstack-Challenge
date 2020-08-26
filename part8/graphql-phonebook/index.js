@@ -84,19 +84,22 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    // personCount: () => persons.length,
-    personCount: () => Person.collection.countDocuments(),
-    allPersons: (root, args) => {
-      var personObj = Person.find({})
+    personCount: async () => await Person.collection.countDocuments(),
+    allPersons: async (root, args) => {
       if (!args.phone) {
-        return personObj;
+        return Person.find({});
       }
-      const byPhone = () =>
-        args.phone = 'YES' ? Person.find({ phone: args.phone}) : !Person.find({ phone: args.phone})
-      return persons.filter(byPhone);
+
+      const person = await Person.find(Person.where('phone').exists(args.phone === 'YES'));
+      return person
     },
-    findPerson: (root, args) =>
-      persons.find(p => p.name === args.name)
+    findPerson: async (root, args) => {
+      const person = await Person.findOne({ name: args.name });
+      if (!person) {
+        return null;
+      }
+      return person
+    },
   },
   Person: {
     address: (root) => {
@@ -108,7 +111,6 @@ const resolvers = {
   },
   Mutation: {
     addPerson: (root, args) => {
-      // if (persons.find(p => p.name === args.name)) {
         const personObj = Person.find({ name: args.name })
         if (personObj.name === args.name) {
           throw new UserInputError('Name must be unique', {
@@ -130,7 +132,7 @@ const resolvers = {
       return person.save();
     }
   },
-  }
+}
 
 
 const server = new ApolloServer({
