@@ -10,7 +10,7 @@ const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY';
 
 mongoose.set('useFindAndModify', false)
 
-MONGODB_URI='mongodb+srv://damigreen:4444@cluster0-9junr.mongodb.net/library-app?retryWrites=true&w=majority'
+const MONGODB_URI='mongodb+srv://damigreen:4444@cluster0-9junr.mongodb.net/library-app?retryWrites=true&w=majority'
 
 console.log('connecting to mongoDB');
 
