@@ -29,7 +29,8 @@ const Persons = ({ result }) => {
   const showPerson = async (name) => {
     const { data } = await client.query({
       query: FIND_PERSON,
-      variables: { nameToSearch: name }
+      variables: { nameToSearch: name },
+      fetchPolicy: 'no-cache'
     })
     setPerson(data.findPerson)
   }
