@@ -102,6 +102,25 @@ function App() {
   })
 
 
+  if (!token) {
+    return (
+      <div>
+        {
+          errorMessage&&
+          <div style={{color: 'red'}}>
+            {errorMessage}
+          </div>
+        }
+        <h2>Login</h2>
+        <LoginForm
+          login={login}
+          setToken={(token) => setToken(token)}
+        />
+
+      </div>
+    )
+  }
+
   return (
     <div>
       {errorMessage && 
@@ -109,12 +128,7 @@ function App() {
          {errorMessage}
         </div>
       }
-      
-      <h2>Login</h2>
-      <LoginForm
-        login={login}
-        setToken={(token) => setToken(token)}
-      />
+
 
       <Persons result={persons} />
 
