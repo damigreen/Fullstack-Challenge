@@ -11,7 +11,8 @@ const PersonForm = (props) => {
     e.preventDefault();
     try {
       await props.addUser({
-        variables: { name, phone, street, city }
+        variables: { name, street, city,
+        phone: phone.length > 0 ? phone : null }
       });
   
       setName('');
