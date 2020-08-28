@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
+import LoginForm from './components/LoginForm'
 
 // const query  = gql`
 //   {
@@ -70,8 +71,19 @@ const EDIT_NUMBER = gql`
   }
 `
 
+const LOGIN = gql`
+  mutation($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`
+
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [token, setToken] = useState(null)
+
+
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message);
     setTimeout(() => {
@@ -85,6 +97,9 @@ function App() {
     refetchQueries: [{ query: ALL_PERSONS }]
   });
   const [editNumber] = useMutation(EDIT_NUMBER);
+  const [login] = useMutation(LOGIN, {
+    onError: handleError
+  })
 
 
   return (
@@ -94,6 +109,12 @@ function App() {
          {errorMessage}
         </div>
       }
+      
+      <h2>Login</h2>
+      <LoginForm
+        login={login}
+        setToken={(token) => setToken(token)}
+      />
 
       <Persons result={persons} />
 
