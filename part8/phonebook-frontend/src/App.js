@@ -39,7 +39,7 @@ function App() {
 
   const persons = useQuery(ALL_PERSONS);
   const [addPerson] = useMutation(CREATE_PERSON, {
-    onError: {handleError},
+    onError: handleError,
     update: (store, response) => {
       const dataInStore = store.readQuery({ query: ALL_PERSONS })
       dataInStore.allPersons.push(response.data.addPerson)
