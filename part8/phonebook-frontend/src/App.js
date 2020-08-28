@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
@@ -80,6 +80,7 @@ const LOGIN = gql`
 `
 
 function App() {
+  const client = useApolloClient();
   const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null)
 
@@ -101,6 +102,12 @@ function App() {
     onError: handleError
   })
 
+  const logout = () => {
+    setToken(null)
+    localStorage.clear();
+    client.resetStore()
+  }
+
 
   if (!token) {
     return (
@@ -116,11 +123,10 @@ function App() {
           login={login}
           setToken={(token) => setToken(token)}
         />
-
       </div>
     )
   }
-
+  
   return (
     <div>
       {errorMessage && 
@@ -128,6 +134,7 @@ function App() {
          {errorMessage}
         </div>
       }
+      <button type="button" onClick={logout}>logout</button>
 
 
       <Persons result={persons} />
