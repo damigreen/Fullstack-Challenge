@@ -1,83 +1,28 @@
-import React, { useState } from 'react';
-import { gql } from 'apollo-boost';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
 import LoginForm from './components/LoginForm'
+import { ALL_PERSONS } from './queries'
+import { CREATE_PERSON } from './queries'
+import { EDIT_NUMBER } from './queries'
+import { LOGIN } from './queries'
 
-// const query  = gql`
-//   {
-//     allPersons {
-//       name
-//       phone
-//       address {
-//         street
-//         city
-//       }
-//       id
-//     }
-//   }
-// `
-// client.query({query})
-//   .then(response => {
-    // console.log(response.data)
-//   })
 
-const ALL_PERSONS = gql`
-  {
-    allPersons {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
-    }
+
+const Notify = ({ errorMessage }) => {
+  if ( !errorMessage ) {
+    return null
   }
-`
 
-const CREATE_PERSON = gql`
-  mutation createPerson($name: String!, $phone: String!, $street: String!, $city: String!) {
-    addPerson(
-      name: $name,
-      phone: $phone,
-      street: $street,
-      city: $city
-    ) {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
-    }
-  }
-`
+  return (
+    <div style={{color: 'red'}}>
+      {errorMessage}
+    </div>
+  )
+}
 
-const EDIT_NUMBER = gql`
-  mutation editNumber($name: String!, $phone: String!) {
-    editNumber(name: $name, phone: $phone) {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
-    }
-  }
-`
-
-const LOGIN = gql`
-  mutation($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      value
-    }
-  }
-`
 
 function App() {
   const client = useApolloClient();
@@ -86,7 +31,7 @@ function App() {
 
 
   const handleError = (error) => {
-    setErrorMessage(error.graphQLErrors[0].message);
+    setErrorMessage(error.graphQLErrors[0].message)
     setTimeout(() => {
       setErrorMessage(null)
     }, 10000);
@@ -95,11 +40,20 @@ function App() {
   const persons = useQuery(ALL_PERSONS);
   const [addPerson] = useMutation(CREATE_PERSON, {
     onError: {handleError},
-    refetchQueries: [{ query: ALL_PERSONS }]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_PERSONS })
+      dataInStore.allPersons.push(response.data.addPerson)
+      store.writeQuery({
+        query: ALL_PERSONS,
+        data: dataInStore,
+      })
+    }
   });
   const [editNumber] = useMutation(EDIT_NUMBER);
-  const [login] = useMutation(LOGIN, {
-    onError: handleError
+  const [login, result] = useMutation(LOGIN, {
+    onError: (error) => {
+      setErrorMessage(error.graphQLErrors[0].message)
+    }
   })
 
   const logout = () => {
@@ -108,16 +62,21 @@ function App() {
     client.resetStore()
   }
 
+  // useEffect(() => {
+  //   if (result.data) {
+  //     const token = result.data.login.value
+  //     setToken(token)
+  //     console.log(token)
+  //     localStorage.setItem('phonenumbers-user-token', token);
+  //   }
+  // }, [result.data])
+
 
   if (!token) {
     return (
       <div>
-        {
-          errorMessage&&
-          <div style={{color: 'red'}}>
-            {errorMessage}
-          </div>
-        }
+        <Notify errorMessage={errorMessage}
+        />
         <h2>Login</h2>
         <LoginForm
           login={login}
@@ -129,16 +88,10 @@ function App() {
   
   return (
     <div>
-      {errorMessage && 
-       <div style={{color: 'red'}}>
-         {errorMessage}
-        </div>
-      }
+      <Notify errorMessage={errorMessage}
+      />
       <button type="button" onClick={logout}>logout</button>
-
-
       <Persons result={persons} />
-
       <PersonForm
         addUser={addPerson}
       />
