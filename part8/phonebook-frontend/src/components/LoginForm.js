@@ -32,6 +32,7 @@ function LoginForm(props) {
           <label for="password">Password</label>
           <input
             value={password}
+            type="password"
             onChange={({target}) => setPassword(target.value)}
           />
         </div>
