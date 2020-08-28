@@ -139,16 +139,16 @@ const resolvers = {
   Mutation: {
     addPerson: async (root, args, context) => {
         const person = new Person({ ...args, id: uuidv4() });
-        const currentUser = context.currentUser;
+        // const currentUser = context.currentUser;
 
-        if (!currentUser) {
-          throw new AuthenticationError("not authenticated")
-        }
+        // if (!currentUser) {
+        //   throw new AuthenticationError("not authenticated")
+        // }
         
         try {
           await person.save();
-          currentUser.friends = currentUser.friends.concact(person)
-          await currentUser.save();
+          // currentUser.friends = currentUser.friends.concact(person)
+          // await currentUser.save();
         } catch (error) {
           console.log(error.message)
           throw new UserInputError(error.message, {
