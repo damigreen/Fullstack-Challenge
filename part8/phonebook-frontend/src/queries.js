@@ -1,17 +1,33 @@
 import { gql } from 'apollo-boost'
 
+const PERSON_DETAILS = gql`
+fragment personDetails on Person {
+  name
+  phone
+  address {
+    street
+    city
+  }
+}
+`
+
 export const ALL_PERSONS = gql`
   {
     allPersons {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
+      ...personDetails
     }
   }
+  ${PERSON_DETAILS}
+`
+
+
+export const FIND_PERSON = gql`
+  query findPersonByName($nameToSearch: String!) {
+    findPerson(name: $nameToSearch) {
+      ...personDetails
+    }
+  }
+  ${PERSON_DETAILS}
 `
 
 export const CREATE_PERSON = gql`
