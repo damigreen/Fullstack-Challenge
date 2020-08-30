@@ -45,6 +45,7 @@ const wsLink = new WebSocketLink({
     reconnect: true
   }
 })
+
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query)
@@ -57,7 +58,7 @@ const splitLink = split(
   authLink.concat(httpLink),
 )
 
-// // ApolloConstructure function using the parameters
+// ApolloConstructure function using the parameters
 const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache()

@@ -37,16 +37,11 @@ export const CREATE_PERSON = gql`
       phone: $phone,
       street: $street,
       city: $city
-    ) {
-      name
-      phone
-      address {
-        street
-        city
-      }
-      id
+    ){
+      ...personDetails
     }
   }
+  ${PERSON_DETAILS}
 `
 
 export const EDIT_NUMBER = gql`
@@ -69,4 +64,13 @@ export const LOGIN = gql`
       value
     }
   }
+`
+
+export const PERSON_ADDED = gql`
+  subscription {
+    personAdded {
+      ...personDetails
+  }
+}
+${PERSON_DETAILS}
 `
