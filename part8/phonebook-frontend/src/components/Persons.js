@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { gql } from 'apollo-boost';
 import { useApolloClient } from '@apollo/react-hooks'
 import { FIND_PERSON } from '../queries'
 
