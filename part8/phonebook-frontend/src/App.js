@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient, useSubscription } from '@apollo/react-hooks'
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
@@ -8,7 +8,7 @@ import { ALL_PERSONS } from './queries'
 import { CREATE_PERSON } from './queries'
 import { EDIT_NUMBER } from './queries'
 import { LOGIN } from './queries'
-
+import { PERSON_ADDED } from './queries'
 
 
 const Notify = ({ errorMessage }) => {
@@ -29,6 +29,12 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null)
 
+  const notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 10000)
+  }
 
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message)
@@ -36,6 +42,30 @@ function App() {
       setErrorMessage(null)
     }, 2000);
   }
+  
+  // Prevent new created persons to be added to the cache twice
+  const updateCacheWith = (addedPerson) => {
+    const includeIn = (set, object) => {
+      set.map(p => p.id).includes(object.id)
+    }
+
+    const dataInStore = client.readQuery({ query: ALL_PERSONS })
+    if (!includeIn(dataInStore.allPersons, addedPerson)) {
+      client.writeQuery({
+        client: ALL_PERSONS,
+        data: { allPersons: dataInStore.allPersons.concat(addPerson)}
+      })
+    }
+  }
+
+  useSubscription(PERSON_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      // console.log(subscriptionData)
+      const addedPerson = subscriptionData.data.personAdded
+      notify(`${addedPerson.name} added`)
+      updateCacheWith(addedPerson)
+    }
+  })
 
   const persons = useQuery(ALL_PERSONS);
   const [addPerson] = useMutation(CREATE_PERSON, {
