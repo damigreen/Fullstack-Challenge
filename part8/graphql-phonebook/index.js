@@ -1,10 +1,11 @@
-const { ApolloServer, UserInputError, gql, AuthenticationError} = require('apollo-server')
+const { ApolloServer, UserInputError, gql, AuthenticationError, PubSub} = require('apollo-server')
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose')
 const Person = require('./models/Person')
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
 
+const pubSub = new PubSub()
 
 const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY';
 
@@ -103,6 +104,11 @@ const typeDefs = gql`
       name: String!
     ): User
   }
+
+  # When a new person is added all the details are sent to all subscribers
+  type Subscription {
+    personAdded: Person!
+  }
 `
 
 const resolvers = {
@@ -154,6 +160,8 @@ const resolvers = {
             invalidArgs: args
           })
         }
+
+        pubSub.publish('PERSON_ADDED', { personAdded: person })
         return person;
     },
     editNumber: async (root, args) => {
@@ -215,6 +223,11 @@ const resolvers = {
       
     }
   },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubSub.asyncIterator(['PERSON_ADDED'])
+    }
+  }
 }
 
 const server = new ApolloServer({
@@ -232,6 +245,7 @@ const server = new ApolloServer({
   },
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
