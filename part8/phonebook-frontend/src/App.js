@@ -34,7 +34,7 @@ function App() {
     setErrorMessage(error.graphQLErrors[0].message)
     setTimeout(() => {
       setErrorMessage(null)
-    }, 10000);
+    }, 2000);
   }
 
   const persons = useQuery(ALL_PERSONS);

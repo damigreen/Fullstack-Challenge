@@ -124,7 +124,6 @@ const resolvers = {
       return person
     },
     me: (root, args, context) => {
-      console.log(context.currentUser.friends)
       return context.currentUser;
     }
   },
