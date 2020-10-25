@@ -1,0 +1,7 @@
+PUT http://localhost:3002/api/notes/5e313ae863ae102514e635e5
+Content-Type: application/json
+
+{
+  "content": "damigreen is green",
+  "important": true
+}

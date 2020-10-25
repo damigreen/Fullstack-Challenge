@@ -1,0 +1,8 @@
+POST http://localhost:3002/api/notes
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbWlncmVlbiIsImlkIjoiNWU1M2VlZGUyYTBmZmYyM2U0ZDVmMzM2IiwiaWF0IjoxNTgyNTY4NzMzfQ.wfKRo4z73Imti2Nuz8h_tLzxkAM9_Rxbr1f6OoRXpT8
+
+{
+  "content": "travel to parts of the world when i am 35",
+  "important": true
+}

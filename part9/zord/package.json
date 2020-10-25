@@ -1,0 +1,20 @@
+{
+  "name": "zords-flight-diaries",
+  "version": "1.0.0",
+  "description": "Flight diary for zord airlines",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "damigreen"
+  },
+  "keywords": [
+    "Typescript",
+    "flight",
+    "airline"
+  ],
+  "author": "Damilola Faseun",
+  "license": "ISC"
+}
