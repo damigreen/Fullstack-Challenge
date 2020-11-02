@@ -12,6 +12,11 @@ const addEntry = () => {
   return null;
 };
 
+const getNonSensitiveSntries = 
+  (): Array<Pick<DiaryEntry, 'id' | 'date' | 'weather' | 'visibility'>> => {
+    // ...
+  };
+
 export default {
   getEntities,
   addEntry
