@@ -12,8 +12,12 @@ const addEntry = () => {
   return null;
 };
 
-const getNonSensitiveSntries = 
-  (): Array<Pick<DiaryEntry, 'id' | 'date' | 'weather' | 'visibility'>> => {
+// const getNonSensitiveSntries = 
+//   (): Pick<DiaryEntry, 'id' | 'date' | 'weather' | 'visibility'>[] => {
+//     // ...
+//   };
+
+const getNonSensitiveSntries = (): Omit<DiaryEntry, 'comment'> => {
     // ...
   };
 
