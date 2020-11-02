@@ -1,4 +1,7 @@
-[
+import { DiaryEntry } from '../src/types';
+
+
+const diaryEntries: Array<DiaryEntry> = [
   {
       "id": 1,
       "date": "2017-01-01",
@@ -28,3 +31,5 @@
       "comment": "I almost failed the landing but I survived"
   }
 ]
+
+export default diaryEntries;
