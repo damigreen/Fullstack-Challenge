@@ -13,7 +13,7 @@ router.post('/', (_req, res) => {
 
 
 router.get('/', (_req, res) => {
-  res.send(diaryServices.getNonSensitiveSntries());
+  res.send(diaryServices.getNonSensitiveEntries());
 });
 
 

@@ -12,12 +12,12 @@ const addEntry = () => {
   return null;
 };
 
-// const getNonSensitiveSntries = 
+// const getNonSensitiveEntries = 
 //   (): Pick<DiaryEntry, 'id' | 'date' | 'weather' | 'visibility'>[] => {
 //     // ...
 //   };
 
-const getNonSensitiveSntries = (): NonSensitiveDiaryEntry[] => {
+const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[] => {
   return diaries.map(({ id, date, weather, visibility }) => ({
     id,
     date,
@@ -26,8 +26,14 @@ const getNonSensitiveSntries = (): NonSensitiveDiaryEntry[] => {
   }));
 };
 
+const findById = (id: number): DiaryEntry => {
+  const entry = diaries.find(d => d.id === id);
+  return entry;
+}
+
 export default {
   getEntities,
   addEntry,
-  getNonSensitiveSntries,
+  getNonSensitiveEntries,
+  findById,
 };
