@@ -1,1 +1,9 @@
 POST http://localhost:3001/api/diaries
+Content-Type: application/json
+
+{
+  "date": "2019-07-11",
+  "weather": "windy",
+  "visibility": "stormy",
+  "comment": "It was a bad weather but a terrible experience"
+}
