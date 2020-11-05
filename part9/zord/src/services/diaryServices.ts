@@ -11,7 +11,7 @@ const getEntities = (): Array<DiaryEntry> => {
 const addDiary = (entry: NewDiaryEntry): DiaryEntry => {
   const newDiaryEntry = {
     id: Math.max(...diaries.map(d => d.id)) + 1,
-    ...entry,
+    ...entry
   };
 
   diaries.push(newDiaryEntry);
